@@ -5,8 +5,16 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network)
+find_package(Protobuf REQUIRED)
 
 qt_standard_project_setup()
+
+# Generate protobuf C++ sources
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
+    proto/messages.proto
+    proto/request.proto
+    proto/context.proto
+)
 
 add_executable(hf-vhf-qt-gui
     src/main.cpp
@@ -14,15 +22,19 @@ add_executable(hf-vhf-qt-gui
     src/ScannerWindow.h
     src/PiScanClient.cpp
     src/PiScanClient.h
+    ${PROTO_SRCS}
+    ${PROTO_HDRS}
 )
+
+target_include_directories(hf-vhf-qt-gui PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(hf-vhf-qt-gui PRIVATE
     Qt6::Core
     Qt6::Widgets
     Qt6::Network
+    protobuf::libprotobuf
 )
 
-# For Visual Studio
 set_target_properties(hf-vhf-qt-gui PROPERTIES
     WIN32_EXECUTABLE TRUE
 )

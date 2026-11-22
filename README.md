@@ -1,24 +1,28 @@
 # HF/VHF Qt6 Scanner GUI
 
-Qt6 replacement for the pygame HDMI GUI.
+Qt6 replacement for the pygame HDMI GUI. Speaks the PiScan protobuf protocol on TCP port 1234.
 
 ## Open in Visual Studio
 
-1. Install Qt 6 and the Qt VS Tools extension.
-2. Open the folder in Visual Studio (File → Open → Folder) or open the CMakeLists.txt.
-3. Select a Qt6 kit and build.
+1. Install Qt 6, the Qt VS Tools extension, and the Protocol Buffers compiler + library.
+2. Open the folder (File → Open → Folder) or the CMakeLists.txt.
+3. Configure with a Qt6 kit and build.
 
-## Build on the Pi (or Linux)
+## Build on the Pi / Linux
 
 ```bash
-sudo apt install qt6-base-dev cmake
+sudo apt install qt6-base-dev cmake protobuf-compiler libprotobuf-dev
 mkdir build && cd build
 cmake ..
 make
+./hf-vhf-qt-gui
 ```
 
-## Status
+## Features
 
-- Window and soft-key layout are in place.
-- PiScanClient has the TCP connection skeleton.
-- Protobuf encoding/decoding still needs to be wired (see the Python version in the main listening-post repo for the message layout).
+- Live frequency and state display
+- SCAN / HOLD / MAN / SQL soft keys
+- Full protobuf encode/decode (ClientToServer / ServerToClient)
+- Automatic context polling once connected
+
+The GUI expects PiScan to be running on localhost:1234 (or change the host in ScannerWindow).

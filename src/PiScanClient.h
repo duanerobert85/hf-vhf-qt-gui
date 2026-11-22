@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QTcpSocket>
+#include <QTimer>
 
 class PiScanClient : public QObject
 {
@@ -13,15 +14,22 @@ public:
     void sendScan();
     void sendHold();
     void sendManual(qint64 freqHz = 0, const QString &mod = "NFM");
-    void sendSql(int level = 50);
+    void sendSql(float level = 50.0f);
 
 signals:
     void statusUpdated(const QString &freq, const QString &state);
+    void connected();
+    void disconnected();
 
 private slots:
     void onReadyRead();
+    void onConnected();
+    void requestContext();
 
 private:
     QTcpSocket *m_socket;
-    void sendRaw(const QByteArray &data);
+    QTimer *m_pollTimer;
+    int m_handle = 1;
+
+    void sendClientMessage(const QByteArray &payload);
 };

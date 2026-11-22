@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package piscan_pb;
+
+message Entry {
+  uint64 freq = 1;
+  string systemTag = 2;
+  string entryTag = 3;
+  string modulation = 4;
+  string entryIndex = 5;
+  enum Lockout {
+    NONE = 0;
+    TIMED = 1;
+    SESSION = 2;
+    PERSISTENT = 3;
+  }
+  Lockout lockoutType = 6;
+  int32 lockoutDuration = 7;
+  int32 delay = 8;
+}
+
+message ScannerContext {
+  enum State {
+    INVAL = 0;
+    SCAN = 1;
+    HOLD = 2;
+    RECEIVE = 3;
+  }
+  State state = 1;
+  Entry entryData = 2;
+  bool manualHold = 3;
+}
+
+message DemodContext {
+  int32 squelch = 1;
+  float gain = 2;
+}
+
+message SignalLevel {
+  float level = 1;
+}
+
+message SystemInfo {
+  string version = 1;
+  repeated string supportedModulations = 5;
+}
+
+message GeneralMessage {
+  string text = 1;
+}
